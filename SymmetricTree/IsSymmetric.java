@@ -45,11 +45,18 @@ class Solution {
     }
     
     boolean isSymmetric2(TreeNode root) {
-
-
+        TreeNode head1,head2;
+        LinkedList<TreeNode> queue1 = new LinkedList<TreeNode>();
+        LinkedList<TreeNode> queue2 = new LinkedList<TreeNode>();
+        queue1.offer(root);
+        queue2.offer(root);
         while (true) {
-            head1 = queue1.poll();
-            head2 = queue2.poll();
+            try {
+                head1 = queue1.removeFirst();
+                head2 = queue2.removeFirst();
+            } catch(Exception ex) {
+                return true;
+            }
             if (head1 != null && head2 == null ||
                 head1 == null && head2 != null ||
                 head1 != null && head2 != null &&
@@ -62,8 +69,8 @@ class Solution {
                 queue2.offer(head2.right);
                 queue2.offer(head2.left);
             }
-            
-    
+        }
+    }
 
 }
 
