@@ -45,20 +45,19 @@ class Solution {
         ArrayList<Integer> array = new ArrayList<Integer>();
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode previsited = null;
-
         while (true) {
             if (root != null) {
                 stack.push(root);
                 root = root.left;
             }else {
                 if (stack.empty()) break;
-                root = stack.pop();
+                root = stack.peek();
                 if (root.right == previsited || root.right == null) {
+                    root = stack.pop();
                     previsited = root;
                     array.add(root.val);
-                    root = stack.pop();
+                    root = null;
                 }else {
-                    stack.push(root);
                     root = root.right;
                 }
             }
@@ -115,11 +114,15 @@ public class PreTrav {
         TreeNode root = new TreeNode(A[0]);
         growTree(root);
         printTree(root);
+        System.out.println("\n");
         Solution sol = new Solution();
+        //root = null;
         ArrayList<Integer> pretree = sol.preorderTraversal(root);
         printSol(pretree);
         ArrayList<Integer> intree = sol.inorderTraversal(root);
         printSol(intree);
+        ArrayList<Integer> posttree = sol.postorderTraversal(root);
+        printSol(posttree);
 
     }
 }
