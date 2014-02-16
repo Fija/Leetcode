@@ -6,6 +6,15 @@ class TreeNode {
     TreeNode(int x) {val = x;}
 }
 
+class State {
+    TreeNode node;
+    LinkedList<Integer> list_command;
+    State(TreeNode tmp_node, LinkedList<Integer> list) {
+        node = tmp_node;
+        list_command = list;
+    }
+}
+
 class Solution {
     ArrayList<Integer> preorderTraversal(TreeNode root) {
         LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
@@ -59,6 +68,49 @@ class Solution {
                     root = null;
                 }else {
                     root = root.right;
+                }
+            }
+        }
+        return array;
+    }
+
+    ArrayList<Integer> stackSim(TreeNode root) {
+        ArrayList<Integer> array = new ArrayList<Integer>();
+        LinkedList<Integer> full_list_command = new LinkedList<Integer>();
+        LinkedList<State> stack = new LinkedList<State>();
+        State state;
+        Integer command;
+        int i;
+        for(i = 0; i < 4; i++) {
+            full_list_command.offer(i);
+        }
+        stack.push(new State(root, new LinkedList<Integer>(full_list_command)));
+        for(;;) {
+            try {
+                state = stack.pop();
+            }catch(Exception ex) {
+                break;
+            }
+            for(;;) {
+                try {
+                    command = state.list_command.pop();
+                }catch(Exception ex) {
+                    break;
+                }
+                if(command == 0) {
+                    if(state.node == null) break;
+                }else if(command == 1) {
+                    stack.push(state);
+                    stack.push(new State(state.node.left,
+                               new LinkedList<Integer>(full_list_command)));
+                    break;
+                }else if(command == 2) {
+                    stack.push(state);
+                    stack.push(new State(state.node.right,
+                               new LinkedList<Integer>(full_list_command)));
+                    break;
+                }else {
+                    array.add(state.node.val);
                 }
             }
         }
@@ -123,7 +175,8 @@ public class PreTrav {
         printSol(intree);
         ArrayList<Integer> posttree = sol.postorderTraversal(root);
         printSol(posttree);
-
+        ArrayList<Integer> stacksimtree = sol.stackSim(root);
+        printSol(stacksimtree);
     }
 }
 
