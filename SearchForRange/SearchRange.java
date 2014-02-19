@@ -11,7 +11,55 @@ class TreeNode {
 }
 
 class Solution {
-
+    int[] searchRange(int[] A, int target) {
+        int[] range = {-1,-1};
+        if(A == null || A.length == 0) return range;
+        int len = A.length;
+        if(target > A[len-1] || target < A[0]) {
+            return range;
+        }else if(target == A[len-1] && target == A[0]) {
+            range[0] = 0; range[1] = len-1;
+            return range;
+        }else if(target == A[0] && target < A[len-1]) {
+            range[0] = 0;
+            findRight(A, range, 0, len-1, target);
+        }else if(target == A[len-1] && target > A[0]) {
+            range[1] = len-1;
+            findLeft(A,range, 0, len-1, target);
+        }else {
+            findLeft(A,range, 0, len-1, target);
+            findRight(A, range, 0, len-1, target);
+        }
+        return range;
+    }
+    void findLeft(int[] A, int[] range, int left, int right, int target) {
+        int mid = (left+right)/2;
+        if(mid == left) {
+            if(target == A[left] || target == A[right]){
+                range[0] =  A[left] == target? left:right;
+            }
+            return;
+        }
+        if(target > A[mid]) {
+            findLeft(A, range, mid, right, target);
+        }else {
+            findLeft(A, range, left, mid, target);
+        }
+    }
+    void findRight(int[] A, int[] range, int left, int right, int target) {
+        int mid = (left+right)/2;
+        if(mid == left) {
+            if(target == A[right] || target == A[left]){
+                range[1] =  A[right] == target? right:left;
+            }
+            return;
+        }
+        if(target >= A[mid]) {
+            findRight(A, range, mid, right, target);
+        }else {
+            findRight(A, range, left, mid, target);
+        }
+    }
 
 //        System.out.print();
 
@@ -86,22 +134,22 @@ class Solution {
     }
 }
 
-public class  {
+public class SearchRange {
     public static void main(String[] args) {
         Solution sol = new Solution();
-/*
-        int[][] A = {{}};
-        int[][] B = {{}};
+
+        int[][] A = {{1,5},{5,7,7,8,8,10},{4,4,4,5,5}};
+        int[][] B = {{4},{8,7,10,11},{4,5}};
 
 
-        sol.printTree(sol.growTree(A[i]));
 
         for(int i = 0; i < A.length ; i++) {
             for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
+                sol.printAr(sol.searchRange(A[i], B[i][j]));
             }
             System.out.println();
         }
+        /*
         System.out.print();
 
         System.out.println();

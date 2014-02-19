@@ -11,7 +11,31 @@ class TreeNode {
 }
 
 class Solution {
-
+    public int[] twoSum(int[] numbers, int target) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        ArrayList<Integer> index = new ArrayList<Integer>();
+        int i;
+        int[] ans = new int[2];
+        for(i = 0; i < numbers.length; i++) {
+            map.put(numbers[i], 1);
+        }
+        for(i = 0; i < numbers.length; i++) {
+            if(map.containsKey(target-numbers[i])) {
+                index.add(i);
+            }
+        }
+        if(index.size() == 3) {
+            for(i =0 ; i< 3; i++) {
+                if(numbers[index.get(i)] == target/2) {
+                    index.remove(i);
+                    break;
+                }
+            }
+        }
+        ans[0] = Math.min(index.get(0),index.get(1))+1;
+        ans[1] = Math.max(index.get(0),index.get(1))+1;
+        return ans;
+    }
 
 //        System.out.print();
 
@@ -86,25 +110,23 @@ class Solution {
     }
 }
 
-public class  {
+public class TwoSum {
     public static void main(String[] args) {
         Solution sol = new Solution();
+        int[][] A = {{1,1},{3,2,4},{7,11,2,15},{9,3,7,8,2,4,7,1}};
+        int[][] B = {{2},{6},{9,17},{4}};
 /*
-        int[][] A = {{}};
-        int[][] B = {{}};
-
-
-        sol.printTree(sol.growTree(A[i]));
-
-        for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
-        }
         System.out.print();
 
         System.out.println();
+
+        sol.printTree(sol.growTree(A[i]));
 */
+        for(int i = 0; i < A.length; i++) {
+            for(int j = 0; j < B[i].length; j++) {
+                sol.printAr(sol.twoSum(A[i],B[i][j]));
+            }
+            System.out.println();
+        }
     }
 }

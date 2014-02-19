@@ -11,6 +11,39 @@ class TreeNode {
 }
 
 class Solution {
+    TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(postorder == null || inorder == null || postorder.length == 0 ||
+           inorder.length == 0) return null;
+        int len = postorder.length;
+        TreeNode root = new TreeNode(postorder[len-1]);
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int i = 0; i < len; i++) {
+            map.put(inorder[i], i);
+        }
+        recurBuild(root, map, inorder, postorder, 0, len-1, 0, len-1);
+        return root;
+    }
+    void recurBuild(TreeNode root, HashMap<Integer, Integer> map, int[] inorder,
+                    int[] postorder, int in_left, int in_right, int post_left,
+                    int post_right) {
+        int idx, left_num, right_num;
+        idx = map.get(postorder[post_right]);
+        if(idx == 6) {
+
+        }
+        left_num = idx - in_left;
+        right_num = in_right - idx;
+        if(left_num != 0) {
+            root.left = new TreeNode(postorder[post_left+left_num-1]);
+            recurBuild(root.left, map, inorder, postorder, in_left,
+                       idx-1, post_left, post_left+left_num-1);
+        }
+        if(right_num != 0) {
+            root.right = new TreeNode(postorder[post_right-1]);
+            recurBuild(root.right, map, inorder, postorder, idx+1,
+                       in_right, post_left+left_num, post_right-1);
+        }
+    }
 
 
 //        System.out.print();
@@ -86,25 +119,23 @@ class Solution {
     }
 }
 
-public class  {
+public class BuildTree {
     public static void main(String[] args) {
         Solution sol = new Solution();
-/*
-        int[][] A = {{}};
-        int[][] B = {{}};
+        int[][] A = {{1},{},{4,2,5,8,1,6,3,9,7},{3,2,1},{1,2,3}};
+        int[][] B = {{1},{},{4,8,5,2,6,9,7,3,1},{3,2,1},{3,2,1}};
+        int[][] C = {{1},{},{1,2,3,4,5,6,7,-1,-1,-1,8,-1,-1,9},{1,2,-1,3},
+                        {1,-1,2,-1,3}};
 
+        //System.out.print();
 
-        sol.printTree(sol.growTree(A[i]));
+        //System.out.println();
+
 
         for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
+            sol.printTree(sol.growTree(C[i]));
+            sol.printTree(sol.buildTree(A[i],B[i]));
         }
-        System.out.print();
-
         System.out.println();
-*/
     }
 }

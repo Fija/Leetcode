@@ -11,6 +11,60 @@ class TreeNode {
 }
 
 class Solution {
+    ArrayList<ArrayList<Integer>> combinationSum(int[] candidates, int target) {
+
+        ArrayList<ArrayList<Integer>> collection =
+            new ArrayList<ArrayList<Integer>>();
+        int[] sorted_arr = Arrays.copyOf(candidates, candidates.length);
+        int[] count = new int[candidates.length];
+
+        Arrays.sort(sorted_arr);
+        return recurFind(collection, count, sorted_arr, 0,
+                          sorted_arr.length-1, target);
+    }
+    ArrayList<ArrayList<Integer>> recurFind(ArrayList<ArrayList<Integer>> 
+            collection, int[] count, int[] sorted_arr, int current_sum,
+             int idx, int target) {
+
+        int[] new_count ;
+/*
+        if(count[3] == 0 && count[2] == 0 ) {
+            System.out.println("Here's problem");
+        }
+        */
+        count[idx] = (target-current_sum)/sorted_arr[idx];
+        if((target - current_sum) % sorted_arr[idx] == 0) {
+            collection.add(transform(count,sorted_arr));
+            count[idx] -= 1;
+        }
+        if(idx == 0) {
+            return collection;
+        }
+        current_sum += count[idx] * sorted_arr[idx];
+        for(; count[idx] >= 0; count[idx]--) {
+            new_count = Arrays.copyOf(count, count.length);
+            recurFind(collection, new_count, sorted_arr, current_sum,
+                      idx-1, target);
+            current_sum -= sorted_arr[idx];
+        }
+        //System.out.println(collection.size());
+        return collection;
+    }
+    ArrayList<Integer> transform(int[] count, int[] sorted_arr) {
+        ArrayList<Integer> combination = new ArrayList<Integer>();
+        for(int i = 0; i < count.length; i++) {
+            if(count[i] != 0) {
+                for(int j = 0; j < count[i]; j++) {
+                    combination.add(sorted_arr[i]);
+                }
+            }
+        }
+        return combination;
+    }
+         
+
+
+
 
 
 //        System.out.print();
@@ -86,25 +140,25 @@ class Solution {
     }
 }
 
-public class  {
+public class CombinationSum {
     public static void main(String[] args) {
         Solution sol = new Solution();
+        int[][] A = {{2,3,6,7}};
+        int[][] B = {{7,9,2,1}};
+
 /*
-        int[][] A = {{}};
-        int[][] B = {{}};
-
-
-        sol.printTree(sol.growTree(A[i]));
-
-        for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
-        }
         System.out.print();
 
         System.out.println();
+
+        sol.printTree(sol.growTree(A[i]));
 */
+        for(int i = 0; i < A.length; i++) {
+            for(int j = 0; j < B[i].length; j++) {
+                sol.printAL2(sol.combinationSum(A[i],B[i][j]));
+            }
+            System.out.println();
+        }
+
     }
 }

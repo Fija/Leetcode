@@ -11,7 +11,22 @@ class TreeNode {
 }
 
 class Solution {
-
+    int longestConsecutive(int[] num) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        int left_end, right_end, max_range = 0, range;
+        for(int i = 0; i < num.length; i++) {
+            if(map.get(num[i]) == null) {
+                left_end = map.containsKey(num[i]-1)? map.get(num[i]-1):0;
+                right_end = map.containsKey(num[i]+1)? map.get(num[i]+1):0;
+                range = left_end + right_end + 1;
+                map.put(num[i] - left_end, range);
+                map.put(num[i] + right_end, range);
+                map.put(num[i], range);
+                if(range > max_range) max_range = range;
+            }
+        }
+        return max_range;
+    }
 
 //        System.out.print();
 
@@ -86,25 +101,26 @@ class Solution {
     }
 }
 
-public class  {
+public class LongestConsecutive {
     public static void main(String[] args) {
         Solution sol = new Solution();
+        int[] A = {100,4,200,1,3,2};
+        //int[] A = {4,0,-4,-2,2,5,2,0,-8,-8,-8,-8,-1,7,4,5,5,-4,6,6,-3};
+        //int[] A = {1};
+        System.out.println(sol.longestConsecutive(A));
+
 /*
-        int[][] A = {{}};
-        int[][] B = {{}};
-
-
-        sol.printTree(sol.growTree(A[i]));
-
-        for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
-        }
         System.out.print();
 
         System.out.println();
+
+        sol.printTree(sol.growTree(A[i]));
+
+        for(int i = 0; i < ; i++) {
+            for(int j = 0; j < ; j++) {
+            }
+            System.out.println();
+        }
 */
     }
 }

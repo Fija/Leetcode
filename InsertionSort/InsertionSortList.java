@@ -11,7 +11,38 @@ class TreeNode {
 }
 
 class Solution {
+     ListNode insertionSortList(ListNode head) {
+        ListNode node = head;
+        ArrayList<ListNode> array = new ArrayList<ListNode>();
+        int i = 0, j;
+        
+        if(head == null) return null;
+        while(node != null) {
+            array.add(node);
+            //printLT(head);
+            //System.out.println(i);
+            j = i;
+            while(j >= 1) {
+                if(node.val < array.get(j-1).val) {
+                    array.set(j, array.get(j-1));
+                    j -= 1;
+                }else {
+                    break;
+                }
+            }
+            array.set(j, node);
+            array.get(i).next = node.next;
+            if(j > 0)
+                array.get(j-1).next = array.get(j);
+            if(j < array.size()-1)
+                array.get(j).next = array.get(j+1);
 
+            node = array.get(i).next;
+            i += 1;
+        }
+        return array.get(0);
+        
+    }
 
 //        System.out.print();
 
@@ -43,6 +74,25 @@ class Solution {
             }
         System.out.println();
     }
+
+    void printLT(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
+
 
 
     TreeNode growTree(int[] A) {
@@ -86,25 +136,21 @@ class Solution {
     }
 }
 
-public class  {
+public class InsertionSortList {
     public static void main(String[] args) {
         Solution sol = new Solution();
-/*
-        int[][] A = {{}};
-        int[][] B = {{}};
-
-
-        sol.printTree(sol.growTree(A[i]));
-
-        for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
-        }
+        int[][] A = {{},{1},{1,3,3,2,4,2,7,-5},{3,7,4,9,5,2,6,1}};
+        /*int[][] B = {{}};
         System.out.print();
 
         System.out.println();
+
+        sol.printTree(sol.growTree(A[i]));
 */
+        for(int i = 0; i < A.length ; i++) {
+            //for(int j = 0; j < B[i].length; j++) {
+            sol.printLT(sol.genList(A[i])); 
+            sol.printLT(sol.insertionSortList(sol.genList(A[i])));
+        }
     }
 }

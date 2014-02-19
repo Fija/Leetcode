@@ -11,7 +11,23 @@ class TreeNode {
 }
 
 class Solution {
-
+    threeSumClosest(int[] num, int target) {
+        int[] sorted_num = Arrays.copyOf(num);
+        Arrays.sort(sorted_num);
+        int sum, closest_sum = sorted_num[0] + sorted_num[1] + sorted_num[2];
+        for(i =0 ; ; i++) {
+            sum = sorted_num[i] + sorted_num[i+1] + sorted_num[i+2];
+            if(sum > target ) {
+                if(target - closest_sum > sum - target) {
+                    return sum;
+                }else {
+                    return closest_sum;
+                }
+            }else {
+                closest_sum = sum;
+            }
+        }
+    }
 
 //        System.out.print();
 
@@ -86,25 +102,21 @@ class Solution {
     }
 }
 
-public class  {
+public class PathSum {
     public static void main(String[] args) {
         Solution sol = new Solution();
 /*
-        int[][] A = {{}};
-        int[][] B = {{}};
-
-
-        sol.printTree(sol.growTree(A[i]));
-
-        for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
-        }
         System.out.print();
 
         System.out.println();
+
+        sol.printTree(sol.growTree(A[i]));
+
+        for(int i = 0; i < ; i++) {
+            for(int j = 0; j < ; j++) {
+            }
+            System.out.println();
+        }
 */
     }
 }
