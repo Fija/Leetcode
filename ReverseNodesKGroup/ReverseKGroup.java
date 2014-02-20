@@ -11,6 +11,47 @@ class TreeNode {
 }
 
 class Solution {
+    ListNode reverseKGroup(ListNode head, int k) {
+        if(head == null || k == 0) return head;
+        ArrayList<ListNode> A = new ArrayList<ListNode>();
+        A.add(new ListNode(0));
+        A.get(0).next = head;
+        while(true) {
+            if(!extendK(A, k)) {
+                break;
+            }
+            reverse(A, k);
+        }
+        return A.get(1);
+    }
+    boolean extendK(ArrayList<ListNode> A, int k) {
+        int i = 0;
+        ListNode node = A.get(A.size()-1).next; 
+        while(i < k) {
+            if(node == null) return false;
+            A.add(node);
+            node = node.next;
+            i += 1;
+        }
+        return true;
+    }
+    void reverse(ArrayList<ListNode> A, int k) {
+        ArrayList<ListNode> B = new ArrayList<ListNode>();
+        ListNode end, head;
+        int len = A.size();
+        head = A.get(len-1-k);
+        end = A.get(len-1).next;
+        for(int i = len-1; i > len-1-k; i--) {
+            B.add(A.get(i));
+            head.next = A.get(i);
+            head = head.next;
+        }
+        for(int i = 0; i < k; i++) {
+            A.set(len-k+i, B.get(i));
+        }
+        head.next = end;
+    }
+
 
 
 //        System.out.print();
@@ -103,22 +144,19 @@ class Solution {
     }
 }
 
-public class  {
+public class ReverseKGroup {
     public static void main(String[] args) {
         Solution sol = new Solution();
-/*
-        int[][] A = {{}};
-        int[][] B = {{}};
-
-
-
+        int[][] A = {{1,2},{1,2,3,4,5}};
+        int[][] B = {{0,1,2},{0,1,2,3,4,5}};
         for(int i = 0; i < A.length ; i++) {
             for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
+                sol.printLT(sol.genList(A[i]));
+                sol.printLT(sol.reverseKGroup(sol.genList(A[i]),B[i][j]));
             }
             System.out.println();
         }
-
+/*
         sol.printTree(sol.growTree(A[i]));
         System.out.print();
         System.out.println();
