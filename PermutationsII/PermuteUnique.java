@@ -26,67 +26,38 @@ class Solution {
 
         ArrayList<Integer> remain_num = new ArrayList<Integer>(
                                         Arrays.asList(sorted_num));
-        LinkedHashSet<Integer> set = 
-            new LinkedHashSet<Integer>(remain_num);
-        Integer[] unique_num = set.toArray(new Integer[0]);
-
-        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-        for(int i = 0; i < unique_num.length; i++) {
-            map.put(unique_num[i], i);
-        }
-
         ArrayList<Integer> permutation = new ArrayList<Integer>();
 
-        recurSolve(collections, unique_num, map, remain_num, permutation);
+        recurSolve(collections, permutation, remain_num, 0);
         return collections; 
     }
-    void recurSolve(ArrayList<ArrayList<Integer>> collections,
-               Integer[] unique_num, HashMap<Integer, Integer> map,
-               ArrayList<Integer> remain_num,
-               ArrayList<Integer> permutation) {
-        ArrayList<Integer> new_permutation = 
-            new ArrayList<Integer>(permutation);
-        ArrayList<Integer> new_remain_num = 
-            new ArrayList<Integer>(remain_num);
-        Integer cur_val, i = 0, idx;
-
+    void recurSolve(ArrayList<ArrayList<Integer>> collections, 
+                    ArrayList<Integer> permutation,
+                    ArrayList<Integer> remain_num,
+                    int i) {
+        LinkedHashSet<Integer> set = 
+            new LinkedHashSet<Integer>(remain_num);
+        Integer[] unique_num = set.toArray(new Integer[set.size()]);
+       
         if(remain_num.size() == 0) {
-            collections.add(new_permutation);
+           collections.add(permutation); 
+           return;
+        }else {
+            ArrayList<Integer> new_permutation = 
+                new ArrayList<Integer>(permutation);
+            ArrayList<Integer> new_remain_num = 
+                new ArrayList<Integer>(remain_num);
+            new_permutation.add(unique_num[i]);
+            new_remain_num.remove(unique_num[i]);
+            recurSolve(collections, new_permutation, new_remain_num, 0);
+        }
+        if(i == unique_num.length-1) {
             return;
         }else {
-            cur_val = new_remain_num.remove(0);
-            i = map.get(cur_val);
-            new_permutation.add(cur_val);
-            recurSolve(collections, unique_num, map, new_remain_num,
-                    new_permutation);
-        }
-        if(i >= unique_num.length-1) {
-            return;
-        }else {
-            new_permutation =  new ArrayList<Integer>(permutation);
-            new_remain_num = new ArrayList<Integer>(remain_num);
-            idx = findNext(remain_num, cur_val);
-            if(idx == -1) {
-                return;
-            }else {
-                cur_val = remain_num.get(idx+1);
-                new_remain_num.remove(cur_val);
-                new_permutation.add(cur_val);
-                recurSolve(collections, unique_num, map, new_remain_num,
-                           new_permutation);
-            }
-        }
-    } 
-    Integer findNext(ArrayList<Integer> remain_num, Integer val) {
-        //Collections.binarySearch(remain_num, val) or
-        //my solution of "Search Range" problem will be more efficient
-        Integer i = remain_num.lastIndexOf(val);
-        if(i < remain_num.size()-1) {
-            return i;
-        }else {
-            return -1;
+            recurSolve(collections, permutation, remain_num, i+1);
         }
     }
+            
 
 
 
@@ -184,7 +155,7 @@ class Solution {
 public class PermuteUnique{
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[][] A = {{1,1,2},{1,2,3},{3,3,5,5,5,4}};
+        int[][] A = {{},{1},{1,1,2},{3,3,5,5,5,4}};
         //int[][] B = {{}};
 
 
