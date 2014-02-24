@@ -14,6 +14,58 @@ class Solution {
     int sum =0;
     int numDistinct(String S, String T) {
         if(S == null || T == null || T.length() > S.length()) return 0;
+        int len_T = T.length(), len_S = S.length(), cur_val=0, pre_val =0, temp;
+        int[] line = new int[len_S+1];
+        for(int i = 0; i <= len_T; i ++) {
+            for(int j=i; j <= len_S; j++) {
+                if(i == 0) {
+                   line[j] = 1;
+                }else {
+                    if(T.charAt(len_T-i) == S.charAt(len_S-j)) {
+                        temp = line[j];
+                        line[j] = cur_val+pre_val;
+                        cur_val = line[j];
+                        pre_val = temp;
+                    }else {
+                        pre_val = line[j];
+                        line[j] = cur_val;
+                        cur_val = line[j];
+                    }
+                }
+            }
+            if(i == len_T) break;
+            pre_val = line[i];
+            cur_val = 0;
+            line[i] = 0;
+        }
+        return line[len_S];
+    }
+    int lessSpaceEfficientNumDistinct(String S, String T) {
+        if(S == null || T == null || T.length() > S.length()) return 0;
+        if(T.length() == 0) return 1;
+        int len_T = T.length(), len_S = S.length();
+        int[] line = new int[len_S+1];
+        int[] new_line = new int[len_S+1];
+        int[] temp_line;
+        for(int i = 1; i <= len_T; i ++) {
+            for(int j=i; j <= len_S; j++) {
+                if(T.charAt(len_T-i) == S.charAt(len_S-j)) {
+                    if(i == 1) new_line[j] = new_line[j-1] +1;
+                    else new_line[j] = new_line[j-1] + line[j-1];
+                }else {
+                    new_line[j] = new_line[j-1];
+                }
+            }
+            temp_line = line;
+            line = new_line;
+            new_line = temp_line;
+            new_line[i] = 0;
+        }
+        return line[len_S];
+    }
+                
+    int recurNumDistinct(String S, String T) {
+        if(S == null || T == null || T.length() > S.length()) return 0;
         if(T.length() == 0) return 1;
         int k;
         HashMap<Character,ArrayList<Integer>> map_S = 
@@ -46,8 +98,8 @@ class Solution {
         recurSolve(S, T, map_S, 0, k);
         return sum; 
     }
-    void recurSolve(String S, String T, HashMap<Character,ArrayList<Integer>> map_S,
-                   int i,int k) {
+    void recurSolve(String S, String T,
+            HashMap<Character,ArrayList<Integer>> map_S,int i,int k) {
         for(int j = k; j < map_S.get(T.charAt(i)).size(); j++) {
             if(i == T.length()-1) {
                 sum += 1;
