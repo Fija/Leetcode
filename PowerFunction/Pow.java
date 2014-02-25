@@ -11,38 +11,31 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
+    double pow(double x, int n) {
+        if(n == 0) return 1;
+        boolean neg = false;
+        if(n < 0) {
+            n = -n;
+            neg = true;
         }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
-                }
-            }
+        ArrayList<Integer> binary = new ArrayList<Integer>();
+        ArrayList<Double> power = new ArrayList<Double>();
+        int i,quotient = n;
+        double sum;
+        while(quotient > 0) {
+            binary.add(quotient % 2);
+            quotient /= 2;
         }
-        return closest_sum;
+        power.add(x);
+        sum = 1;
+        for(i = 0; i < binary.size(); i++) {
+            if(binary.get(i) == 1) sum *= binary.get(i) * power.get(i);
+            power.add(power.get(i) *power.get(i));
+        }
+        if(neg) {
+            sum = 1/sum;
+        }
+        return sum;
     }
 
 //        System.out.print();
@@ -76,6 +69,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +128,23 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class Pow {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
+        double[] A = {1.000001,-2,0,1,3.5};
+        int[][] B = {{100000000},{-2,-1,0,1,2},{-2,-1,0,1,2},{-2,-1,0,1,2},{-2,-1,0,1,2}};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
+
+        for(int i = 0; i < A.length ; i++) {
+            for(int j = 0; j < B[i].length; j++) {
+            System.out.println(sol.pow(A[i],B[i][j]));
             }
-            
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

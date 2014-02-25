@@ -11,39 +11,45 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
+    ArrayList<String> letterCombinations(String digits) {
+        ArrayList<String> collection = new ArrayList<String>();
+        String s ="";
+        if(digits == null || digits.length() == 0){
+            collection.add(s);
+            return collection;
         }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
-                }
-            }
-        }
-        return closest_sum;
+        HashMap<Character, String> map = new HashMap<Character, String>();
+        map.put('0'," ");
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
+        recurSolve(collection, s, 0, 0, map, digits);
+        return collection;
     }
+    void recurSolve(ArrayList<String> collection, String s, int i, int j,
+                    HashMap<Character, String> map, String digits) {
+        String new_s = new String(s);
+
+        new_s += map.get(digits.charAt(j)).charAt(i);
+        if(j == digits.length()-1) {
+            collection.add(new_s);
+        }else {
+            recurSolve(collection, new_s, 0, j+1, map, digits);
+        }
+        if(i == map.get(digits.charAt(j)).length()-1) {
+            return;
+        }else {
+            recurSolve(collection, s, i+1, j, map, digits);
+        }
+    }
+
+
+    
 
 //        System.out.print();
 
@@ -60,7 +66,7 @@ class Solution {
         System.out.println();
     }
 
-    void printAL(ArrayList<Integer> A) {
+    void printAL(ArrayList<String> A) {
         if(A == null) return;
         for(int i = 0; i < A.size(); i++) {
                 System.out.print(A.get(i)+" ");
@@ -76,6 +82,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +141,21 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class  LetterCombinations{
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
+        String[] A = {"","9","8304","2","29","23"};
+        //int[][] B = {{}};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+
+        for(int i = 0; i < A.length ; i++) {
+            sol.printAL(sol.letterCombinations(A[i]));
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

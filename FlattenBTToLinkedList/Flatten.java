@@ -11,39 +11,38 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
-                }
-            }
-        }
-        return closest_sum;
+    void flatten(TreeNode root) {
+        if(root == null) return;
+        ArrayList<Integer> list = preOrder(root);
+        getTree(list, root);
     }
+    ArrayList<Integer> preOrder(TreeNode root) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.push(root);
+        while(true) {
+            try {
+                root = stack.pop();
+            }catch(Exception ex) {
+                break;
+            }
+            list.add(root.val);
+            if(root.right != null)
+                stack.push(root.right);
+            if(root.left != null)
+                stack.push(root.left);
+        }
+        return list;
+    }
+    void getTree(ArrayList<Integer> list, TreeNode node) {
+        node.left = null;
+        for(int i = 1; i < list.size(); i++) {
+            node.right = new TreeNode(list.get(i));
+            node = node.right;
+        }
+    }
+
+
 
 //        System.out.print();
 
@@ -76,6 +75,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +134,25 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class Flatten{
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
+        int[][] A = {{},{1},{1,2},{1,2,5,3,4,-1,6}};
+        TreeNode root;
+        //int[][] B = {{}};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+
+        for(int i = 0; i < A.length ; i++) {
+            root = sol.growTree(A[i]);
+            sol.printTree(root);
+            sol.flatten(root);
+            sol.printTree(root);
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

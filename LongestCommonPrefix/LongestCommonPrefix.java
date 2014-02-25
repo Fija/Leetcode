@@ -11,38 +11,20 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
+    String longestCommonPrefix(String[] strs) {
+        String prefix = "";
+        if(strs == null || strs.length == 0|| strs[0] == null) return prefix;
+        if(strs.length == 1 && strs[0] != null) return strs[0];
+        int i, j;
+        for(i = 0;;i++) {
+            for(j = 0; j< strs.length-1; j++) {
+                if((i >= strs[j].length() || i >= strs[j+1].length()) ||
+                        (strs[j].charAt(i) != strs[j+1].charAt(i))) {
+                    return prefix;
                 }
             }
+            prefix+=strs[0].charAt(i);
         }
-        return closest_sum;
     }
 
 //        System.out.print();
@@ -76,6 +58,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +117,18 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class LongestCommonPrefix {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
-
-
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+        String[][] A = {{},{null},{""},{"","","a"},{"ab","ab","ab"},{"abc","","a"},
+                        {"solution","sol","solu"}};
+        for(int i = 0; i < A.length ; i++) {
+            System.out.println(sol.longestCommonPrefix(A[i]));
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

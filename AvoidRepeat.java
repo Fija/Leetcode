@@ -44,7 +44,7 @@ class Solution {
         System.out.println();
     }
 
-    void printLT(ListNode head) {
+    void printLN(ListNode head) {
         while(head != null) {
             System.out.print(head.val+" ");
             head = head.next;

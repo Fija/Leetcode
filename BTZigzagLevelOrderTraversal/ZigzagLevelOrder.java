@@ -11,38 +11,39 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
+    ArrayList<ArrayList<Integer>> zigzagLevelOrder(TreeNode root) {
+        ArrayList<ArrayList<Integer>> path = new ArrayList<ArrayList<Integer>>();
+        if(root == null) return path;
+        Stack<TreeNode> cur_stack = new Stack<TreeNode>(), next_stack = null;
+        cur_stack.push(root);
+        int i = 0;
+        while(!cur_stack.empty()) {
+            path.add(new ArrayList<Integer>());
+            next_stack = new Stack<TreeNode>();
+            while(true) {
+                try {
+                    root = cur_stack.pop();
+                }catch(Exception ex) {
+                    break;
                 }
-                if(sum > target) {
-                    k -= 1;
+                path.get(i).add(root.val);
+                if(i % 2 == 0) {
+                    if(root.left != null)
+                    next_stack.push(root.left);
+                    if(root.right != null)
+                    next_stack.push(root.right);
                 }else {
-                    j += 1;
+                    if(root.right != null)
+                    next_stack.push(root.right);
+                    if(root.left != null)
+                    next_stack.push(root.left);
                 }
             }
+            cur_stack = next_stack;
+            i += 1;
         }
-        return closest_sum;
+        //System.out.println(path.size());
+        return path;
     }
 
 //        System.out.print();
@@ -76,6 +77,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +136,19 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class ZigzagLevelOrder  {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
-
-
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+        int[][] A = {{},{1},{3,9,20,-1,-1,15,7},{1,2,3,4,5,6,7,8,9}};
+        //int[][] B = {{}};
+        for(int i = 0; i < A.length ; i++) {
+            sol.printTree(sol.growTree(A[i]));
+            sol.printAL2(sol.zigzagLevelOrder(sol.growTree(A[i])));
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

@@ -11,38 +11,34 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
-                }
+    String addBinary(String a, String b) {
+        int i, sum, add=0, len_a = a.length(), len_b = b.length();
+        String c = "";
+        for(i = 0; ;i++) {
+            if(i < len_a && i < len_b) {
+                sum = Character.getNumericValue(a.charAt(len_a-1-i)) +
+                      Character.getNumericValue(b.charAt(len_b-1-i)) +
+                      add;
+            }else if(i < len_a ) {
+                sum = Character.getNumericValue(a.charAt(len_a-1-i)) + add;
+            }else if(i < len_b ) {
+                sum = Character.getNumericValue(b.charAt(len_b-1-i)) + add;
+            }else {
+                if(add == 1) c = add+c;
+                break;
+            }
+            if(sum == 2) {
+                c = "0"+c;
+                add = 1;
+            }else if(sum == 3) {
+                c = "1"+c;
+                add = 1;
+            }else {
+                c = sum + c;
+                add = 0;
             }
         }
-        return closest_sum;
+        return c; 
     }
 
 //        System.out.print();
@@ -76,6 +72,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +131,21 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class AddBinary {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
+        String[] A = {"","1","0","1","111","11"};
+        String[] B = {"","","0","1","1111","1"};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+
+        for(int i = 0; i < A.length ; i++) {
+            System.out.println(sol.addBinary(A[i],B[i]));
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

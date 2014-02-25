@@ -11,39 +11,56 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
-                }
-            }
-        }
-        return closest_sum;
+    int idx=0;
+    TreeNode sortedListToBST(ListNode head) {
+        ArrayList<Integer> list = toList(head);
+        printAL(list);
+        TreeNode root = getTree(list.size());
+        printTree(root);
+        toBST(root,list);
+        return root;
     }
+    ArrayList<Integer> toList(ListNode head) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        while(head != null) {
+            list.add(head.val);
+            head = head.next;
+        }
+        return list;
+    }
+    TreeNode getTree(int len) {
+        if(len == 0) return null;
+        TreeNode root = new TreeNode(0), node = root;
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        int i = 1;
+        while(true) {
+            node = queue.pop();
+            if(i == len) break;
+            node.left = new TreeNode(0);
+            queue.offer(node.left);
+            i+= 1;
+            if(i == len) break;
+            node.right = new TreeNode(0);
+            queue.offer(node.right);
+            i+= 1;
+        }
+        return root;
+    }
+    void toBST(TreeNode root, ArrayList<Integer> list) {
+        if(root == null) {
+            return;
+        }else {
+            toBST(root.left, list);
+            root.val = list.get(idx);
+            idx+=1;
+            toBST(root.right,list);
+        }
+    }
+
+
+
+
 
 //        System.out.print();
 
@@ -76,6 +93,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +152,23 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class SortedListToBST  {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
-        Solution sol = new Solution();
+        Solution sol;
+        int[][] A = {{},{1},{1,2,3},{1,2,3,4,5,6,7,8,9}};
+        //int[][] B = {{}};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+
+        for(int i = 0; i < A.length ; i++) {
+            sol = new Solution();
+            sol.printLN(sol.genList(A[i]));
+            sol.printTree(sol.sortedListToBST(sol.genList(A[i])));
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

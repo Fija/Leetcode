@@ -11,38 +11,41 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
+    boolean isValidBST(TreeNode root) {
+        if(root == null) {
+            return true;
+        }else {
+            return (max(root.left) < root.val && min(root.right) > root.val &&
+                    isValidBST(root.left) && isValidBST(root.right));
         }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
-                }else {
-                    j += 1;
-                }
+    }
+    int max(TreeNode node) {
+        if(node == null) {
+            return Integer.MIN_VALUE;
+        }else {
+            int left = max(node.left), right = max(node.right);
+            if(left > right) {
+                if(node.val > left) return node.val;
+                else return left;
+            }else {
+                if(node.val > right) return node.val;
+                else return right;
             }
         }
-        return closest_sum;
+    }
+    int min(TreeNode node) {
+        if(node == null) {
+            return Integer.MAX_VALUE;
+        }else {
+            int left = min(node.left), right = min(node.right);
+            if(left < right) {
+                if(node.val < left) return node.val;
+                else return left;
+            }else {
+                if(node.val < right) return node.val;
+                else return right;
+            }
+        }
     }
 
 //        System.out.print();
@@ -76,6 +79,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +138,24 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class  IsValidBST{
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
+        int[][] A = {{0,-2},{1},{8,3,10,1,6,-1,14,-1,-1,4,9,13}};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+
+        for(int i = 0; i < A.length ; i++) {
+            sol.printTree(sol.growTree(A[i]));
+            if(sol.isValidBST(sol.growTree(A[i])))
+                System.out.println("T");
+            else
+                System.out.println("F");
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

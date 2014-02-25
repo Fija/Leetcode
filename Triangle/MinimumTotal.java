@@ -11,38 +11,30 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
+    int minimumTotal(ArrayList<ArrayList<Integer>> triangle) {
+        int temp, pre_val =0, min;
+        int[] path = new int[triangle.size()];
+        path[0] = triangle.get(0).get(0); 
+        for(int i = 1; i < triangle.size(); i++) {
+            for(int j = 0; j <triangle.get(i).size(); j++) {
+                temp = path[j];
+                if(j == 0) {
+                    path[j] = triangle.get(i).get(j) +path[j];
+                }else if(j == triangle.get(i).size()-1) {
+                    path[j] = triangle.get(i).get(j) + pre_val;
                 }else {
-                    j += 1;
+                    path[j] = triangle.get(i).get(j) + Math.min(pre_val, path[j]);
                 }
+                pre_val = temp;
             }
         }
-        return closest_sum;
+
+        min = path[0];
+        for(int i = 0; i < triangle.size(); i++) {
+            if(path[i] < min ) min = path[i];
+        }
+
+        return min;
     }
 
 //        System.out.print();
@@ -76,6 +68,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +127,20 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class MinimumTotal {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
-
-
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
+        //int[][] A = {{2},{3,4},{6,5,7},{4,1,8,3}};
+        int[][] A = {{2},{3,4}};
+        ArrayList<ArrayList<Integer>> B = new ArrayList<ArrayList<Integer>>();
+        for(int i = 0; i < A.length ; i++) {
+            B.add(new ArrayList<Integer>());
+            for(int j = 0; j < A[i].length; j++) {
+                B.get(i).add(A[i][j]);
             }
-            
         }
+
+        sol.printAL2(B);
+        System.out.println(sol.minimumTotal(B));
     }
 }

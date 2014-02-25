@@ -11,41 +11,41 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
+    ListNode mergeKLists(ArrayList<ListNode> lists) {
+        if(lists == null || lists.size() == 0) return null;
+        int i= 0, idx = 1;
+        while(i+idx <= lists.size()-1) {
+            while(i+idx <= lists.size()-1) {
+                lists.set(i, mergeSort(lists.get(i), lists.get(i+idx)));
+                i += 2*idx;
+            }
+            i = 0;
+            idx *= 2;
         }
-
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
-            for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
-                }
-                if(sum > target) {
-                    k -= 1;
+        return lists.get(0);
+    }
+    ListNode mergeSort(ListNode node1, ListNode node2) {
+        ListNode head1 = new ListNode(0), pre_node1 = head1;
+        pre_node1.next = node1;
+        while(node2 != null) {
+            if(node1 != null) {
+                if (node1.val < node2.val) {
+                    node1 = node1.next;
+                    pre_node1 = pre_node1.next;
                 }else {
-                    j += 1;
+                    pre_node1.next = node2;
+                    pre_node1 = pre_node1.next;
+                    node2 = node2.next;
+                    pre_node1.next = node1;
                 }
+            }else {
+                pre_node1.next = node2;
+                pre_node1 = pre_node1.next;
+                node2 = node2.next;
             }
         }
-        return closest_sum;
+        return head1.next;
     }
-
-//        System.out.print();
 
 //        System.out.println();
 
@@ -76,6 +76,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +135,23 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class MergeKLists {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
 
+        //int[][] A = {{},{3,6,7},{1,4,13},{4,5,9}};
+        int[][] A = {{1}};
+        //int[][] B = {{}};
+        ArrayList<ListNode> lists = new ArrayList<ListNode>();
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+        for(int i = 0; i < A.length ; i++) {
+            lists.add(sol.genList(A[i]));
         }
+        sol.printLN(sol.mergeKLists(lists));
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }

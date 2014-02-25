@@ -11,38 +11,41 @@ class TreeNode {
 }
 
 class Solution {
-    int threeSumClosest(int[] num, int target) {
-        if(num == null || num.length == 0) return 0;
-        if(num.length <= 2) {
-            int s = 0;
-            for(int i = 0; i < num.length; i++) s += num[i];
-            return s;
-        }
+    ArrayList<ArrayList<Integer>> threeSum(int[] num) {
+        ArrayList<ArrayList<Integer>> collection = 
+            new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> solution;
+        if(num == null || num.length <= 2) return collection;
+        int i, j, k, sum, len = num.length;
+        Integer[] sorted_sum = new Integer[len];
+        for(i = 0; i < len; i++) sorted_sum[i] = num[i];
+        Arrays.sort(sorted_sum);
 
-        Integer[] sorted_num = new Integer[num.length];
-        for(int i = 0; i < num.length; i++) sorted_num[i] = num[i];
-        Arrays.sort(sorted_num);
-
-        int sum, i, j, k, closest_sum = sorted_num[0]+sorted_num[1]+sorted_num[2];
-        if(closest_sum == target) return target;
-
-        for(i =0 ; i < num.length-2 ; i++) {
-            j = i + 1;
-            k = num.length-1;
+        for(i = 0; i < len-2; i++) {
+            if(i > 0 && sorted_sum[i] == sorted_sum[i-1]) continue;
+            j = i +1;
+            k = len-1;
             for(;j < k;) {
-                sum = sorted_num[i] + sorted_num[j] + sorted_num[k];
-                if(Math.abs(sum-target) < Math.abs(closest_sum-target)) {
-                    closest_sum = sum;
-                    if(closest_sum == target) return target;
+                if(j > i+1 && sorted_sum[j] == sorted_sum[j-1]) {
+                    j+= 1;
+                    continue;
                 }
-                if(sum > target) {
+                sum = sorted_sum[i]+sorted_sum[j]+sorted_sum[k];
+                if(sum == 0) {
+                    solution = new ArrayList<Integer>();
+                    solution.add(sorted_sum[i]);
+                    solution.add(sorted_sum[j]);
+                    solution.add(sorted_sum[k]);
+                    collection.add(solution);
+                }
+                if(sum > 0) {
                     k -= 1;
                 }else {
                     j += 1;
                 }
             }
         }
-        return closest_sum;
+        return collection;
     }
 
 //        System.out.print();
@@ -76,6 +79,23 @@ class Solution {
         System.out.println();
     }
 
+    void printLN(ListNode head) {
+        while(head != null) {
+            System.out.print(head.val+" ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    ListNode genList(int[] A) {
+        if(A == null) return null;
+        ListNode head = new ListNode(0), node = head;
+        for(int i = 0 ; i < A.length; i++) {
+            node.next = new ListNode(A[i]);
+            node = node.next;
+        }
+        return head.next;
+    }
 
     TreeNode growTree(int[] A) {
         if(A == null || A.length == 0) return null;
@@ -118,18 +138,22 @@ class Solution {
     }
 }
 
-public class ThreeSumClosest {
+public class ThreeSum {
     public static void main(String[] args) {
-        int[][] A = {{},{3,4,1,2,5},{-1,2,1,-4}};
-        int[][] B = {{1},{9,18,1},{1,0,4,-4}};
         Solution sol = new Solution();
+        int[][] A = {{0,0,0,0,0},{3,1,-4},{-1,-1,-1,-1,0,1},{-1,0,1,2,-1,-4}};
+        //int[][] B = {{}};
 
 
-        for(int i = 0; i < A.length; i++) {
-            for(int j = 0; j < B[i].length ; j++) {
-                System.out.println(sol.threeSumClosest(A[i],B[i][j]));
-            }
-            
+
+        for(int i = 0; i < A.length ; i++) {
+            sol.printAL2(sol.threeSum(A[i]));
         }
+/*
+        sol.printTree(sol.growTree(A[i]));
+        System.out.print();
+        System.out.println();
+*/
     }
 }
+
