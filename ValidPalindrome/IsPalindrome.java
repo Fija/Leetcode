@@ -11,20 +11,17 @@ class TreeNode {
 }
 
 class Solution {
-    int firstMissingPositive(int[] A) {
-        int temp, i, len = A.length;
-        for(i = 0; i < len; i++) {
-            while(A[i] >= 1 && A[i] <= len &&
-                  A[i] != i+1 && A[A[i]-1] != A[i]) {
-                temp = A[A[i]-1];
-                A[A[i]-1] = A[i];
-                A[i] = temp;
-            }
+    boolean isPalindrome(String s) {
+        int i;
+        if(s == null) return true;
+        s = s.replaceAll("\\W","");
+        if(s.length() == 0) return true;
+        s = s.toLowerCase();
+        for(i = 0; i <= (s.length()-1)/2; i++) {
+            if(s.charAt(i) != s.charAt(s.length()-1-i))
+                return false;
         }
-        for(i = 0; i < len; i++) {
-            if(A[i] != i+1) return i+1;
-        }
-        return len+1;
+        return true;
     }
 
 //        System.out.print();
@@ -117,17 +114,16 @@ class Solution {
     }
 }
 
-public class FirstMissingPositive {
+public class IsPalindrome {
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[][] A = {{},{1,1},{6,8,10,4,1,2,3,5,7,11},{0},{1},{-1},{1,2,0},
-                     {3,4,-1,1}};
+        String[] A = {"ab","",",:","A man, a plan, a canal: Panama","race a car"};
         //int[][] B = {{}};
 
 
 
         for(int i = 0; i < A.length ; i++) {
-            System.out.println(sol.firstMissingPositive(A[i]));
+            System.out.println(sol.isPalindrome(A[i]));
         }
 /*
         sol.printTree(sol.growTree(A[i]));

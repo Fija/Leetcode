@@ -11,20 +11,19 @@ class TreeNode {
 }
 
 class Solution {
-    int firstMissingPositive(int[] A) {
-        int temp, i, len = A.length;
-        for(i = 0; i < len; i++) {
-            while(A[i] >= 1 && A[i] <= len &&
-                  A[i] != i+1 && A[A[i]-1] != A[i]) {
-                temp = A[A[i]-1];
-                A[A[i]-1] = A[i];
-                A[i] = temp;
-            }
+    ArrayList<Integer> spiralOrder(int[][] matrix) {
+        ArrayList<Integer> A = new ArrayList<Integer>();
+        if(matrix == null ||matrix.length == 0 || matrix[0].length == 0) return A;
+        int i=0, j=0, m = matrix.length, n = matrix[0].length;
+        while(true) {
+            A.add(matrix[i][j]);
+            if(A.size() == m*n) break;
+            if(j >= i-1 && j+i < n-1 && i <= (m-1)/2) j += 1;
+            else if(j+i >= n-1 && i-j < m-n && j >= n/2) i += 1;
+            else if(i-j >= m-n && j+i > m-1 && i > (m-1)/2) j -= 1;
+            else if(i+j <= m-1 && j < i-1 && j < n/2) i -= 1;
         }
-        for(i = 0; i < len; i++) {
-            if(A[i] != i+1) return i+1;
-        }
-        return len+1;
+        return A; 
     }
 
 //        System.out.print();
@@ -117,17 +116,20 @@ class Solution {
     }
 }
 
-public class FirstMissingPositive {
+public class SpiralOrder {
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[][] A = {{},{1,1},{6,8,10,4,1,2,3,5,7,11},{0},{1},{-1},{1,2,0},
-                     {3,4,-1,1}};
-        //int[][] B = {{}};
+        int[][][] A = {{{1,2},{3,4},{5,6}},
+                       {{1,2,3},{4,5,6}},
+                       {{1,2,3}},
+                       {{1,2,3},{4,5,6},{7,8,9}},
+                       {{1},{2},{3}},
+                       {{1,2,3,4,5,6,7,8,9,10},{11,12,13,14,15,16,17,18,19,20}}};
 
 
 
         for(int i = 0; i < A.length ; i++) {
-            System.out.println(sol.firstMissingPositive(A[i]));
+            sol.printAL(sol.spiralOrder(A[i]));
         }
 /*
         sol.printTree(sol.growTree(A[i]));
@@ -136,3 +138,4 @@ public class FirstMissingPositive {
 */
     }
 }
+

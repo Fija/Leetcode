@@ -11,20 +11,24 @@ class TreeNode {
 }
 
 class Solution {
-    int firstMissingPositive(int[] A) {
-        int temp, i, len = A.length;
-        for(i = 0; i < len; i++) {
-            while(A[i] >= 1 && A[i] <= len &&
-                  A[i] != i+1 && A[A[i]-1] != A[i]) {
-                temp = A[A[i]-1];
-                A[A[i]-1] = A[i];
-                A[i] = temp;
-            }
+    ListNode rotateRight(ListNode head, int n) {
+        if(head == null) return null;
+        int len;
+        ListNode pre_head = new ListNode(0);
+        pre_head.next = head; 
+        ArrayList<ListNode> array = new ArrayList<ListNode>();
+        while(head != null) {
+            array.add(head);
+            head = head.next;
         }
-        for(i = 0; i < len; i++) {
-            if(A[i] != i+1) return i+1;
+        len = array.size();
+        n = n % len;
+        if(n != 0) {
+            pre_head.next = array.get(len-n);
+            array.get(len-n-1).next = null;
+            array.get(len-1).next = array.get(0);
         }
-        return len+1;
+        return pre_head.next;
     }
 
 //        System.out.print();
@@ -117,17 +121,19 @@ class Solution {
     }
 }
 
-public class FirstMissingPositive {
+public class  RotateRight{
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[][] A = {{},{1,1},{6,8,10,4,1,2,3,5,7,11},{0},{1},{-1},{1,2,0},
-                     {3,4,-1,1}};
-        //int[][] B = {{}};
+        int[][] A = {{},{1,2},{1,2,3,4,5}};
+        int[][] B = {{0,1},{0,1,2},{0,1,2,3,4,5,6}};
 
 
 
         for(int i = 0; i < A.length ; i++) {
-            System.out.println(sol.firstMissingPositive(A[i]));
+            for(int j = 0; j < B[i].length; j++) {
+            sol.printLN(sol.genList(A[i]));
+            sol.printLN(sol.rotateRight(sol.genList(A[i]),B[i][j]));
+            }
         }
 /*
         sol.printTree(sol.growTree(A[i]));

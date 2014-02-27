@@ -11,21 +11,59 @@ class TreeNode {
 }
 
 class Solution {
-    int firstMissingPositive(int[] A) {
-        int temp, i, len = A.length;
-        for(i = 0; i < len; i++) {
-            while(A[i] >= 1 && A[i] <= len &&
-                  A[i] != i+1 && A[A[i]-1] != A[i]) {
-                temp = A[A[i]-1];
-                A[A[i]-1] = A[i];
-                A[i] = temp;
-            }
+    String getPermutation(int n, int k) {
+        int i, num, rank;
+        ArrayList<Integer> remain = new ArrayList<Integer>();
+        for(i = 0; i < n; i++) remain.add(i+1);
+        int[] fac = {1,1,2,6,24,120,720,5040,40320,362880,3628800};
+        String s ="";
+        if(k > fac[n]) return s;
+        for(i = 0; i < n; i++) {
+            rank = (k-1) / fac[n-i-1];
+            num = remain.get(rank);
+            s = s+num;
+            remain.remove((Integer)num);
+            k = k - rank * fac[n-i-1];
         }
-        for(i = 0; i < len; i++) {
-            if(A[i] != i+1) return i+1;
-        }
-        return len+1;
+        return s;
     }
+
+    String StupidGetPermutation(int n, int k) {
+        ArrayList<Integer> remain = new ArrayList<Integer>();
+        String s = "";
+        String[] ans = new String[1];
+        ans[0] = "";
+        int[] count = new int[1];
+        int i;
+        for(i = 0; i < n; i++) {
+            remain.add(i+1);
+        }
+        recurSolve(ans,count, s, remain, k, n, 0);
+        return ans[0];
+    }
+    void recurSolve(String[] ans, int[] count, String s,
+                    ArrayList<Integer> remain, int k, int n, int i) {
+        String new_s = new String(s);
+        ArrayList<Integer> new_remain = new ArrayList<Integer>(remain); 
+
+        new_s = s + remain.get(i);
+        if(new_s.length() == n) {
+            count[0]+= 1;
+            if(count[0] == k) {
+                ans[0] = new_s;
+                return;
+            }
+        }else {
+            new_remain.remove(remain.get(i));
+            recurSolve(ans, count, new_s, new_remain, k, n, 0);
+        }
+        if(i != remain.size()-1) {
+            recurSolve(ans, count, s, remain, k, n, i+1);
+        }
+    }
+
+
+
 
 //        System.out.print();
 
@@ -117,17 +155,19 @@ class Solution {
     }
 }
 
-public class FirstMissingPositive {
+public class GetPermutation  {
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[][] A = {{},{1,1},{6,8,10,4,1,2,3,5,7,11},{0},{1},{-1},{1,2,0},
-                     {3,4,-1,1}};
-        //int[][] B = {{}};
+
+        int[] A = {3,1};
+        int[][] B = {{2,6,7},{1,2}};
 
 
 
         for(int i = 0; i < A.length ; i++) {
-            System.out.println(sol.firstMissingPositive(A[i]));
+            for(int j = 0; j < B[i].length; j++) {
+            System.out.println(sol.getPermutation(A[i],B[i][j]));
+        }
         }
 /*
         sol.printTree(sol.growTree(A[i]));
