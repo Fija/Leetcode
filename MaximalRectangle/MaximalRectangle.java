@@ -11,7 +11,9 @@ class TreeNode {
 }
 
 class Solution {
-
+    int maximalRectangle(char[][] matrix) {
+            
+        }
 
 //        System.out.print();
 
@@ -103,7 +105,7 @@ class Solution {
     }
 }
 
-public class  {
+public class  MaximalRectangle{
     public static void main(String[] args) {
         Solution sol = new Solution();
         int[][] A = {{}};
