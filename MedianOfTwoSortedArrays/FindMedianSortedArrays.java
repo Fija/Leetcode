@@ -12,7 +12,41 @@ class TreeNode {
 
 class Solution {
     double findMedianSortedArrays(int A[], int B[]) {
-        
+        if(A[0] > B[0]) {
+            temp = A;A = B;B = temp;
+            sA = sA^sB; sB = sA^sB; sA = sA^sB;
+            eA = eA^eB; eB = eA^eB; eA = eA^eB;
+        }
+        lenA = eA-sA+1;
+        lenB = eB-sB+1;
+        idxA = (lenA-1)/2;
+        idxB1 = Arrays.binarySearch(B, A[idxA]);
+        idxB2 = Arrays.binarySearch(B, A[eA]);
+        if(idxB2 < 0) {
+            if (lenA-1 < rank) return B[rank-lenA];
+            else return A[rank];
+        }else if(idxB2 < 
+
+        if(idxB + idxA + 1 == rank) {
+            if(odd) return B[idxB];
+            else {
+                if(idxA < lenA-1 && idxB < lenB-1) {
+                    return (A[idxA+1] < B[idxB+1]? (B[idxB]+A[idxA+1])/2 :
+                            (B[idxB]+B[idxB+1])/2);
+                }else if(idxA < lenA-1) {
+                    return (B[idxB]+A[idxA+1])/2;
+                }else if(idxB < lenB-1) {
+                    return (B[idxB]+B[idxB+1])/2;
+                }
+            }
+        }else if(idxB + idxA +1 < rank) {
+            rank = rank - idxB - idxA - 2;
+            sA = idxA+1;
+            sB = idxB;
+        }else {
+            eA = idxA;
+            eB = idxB-1;
+        }
     }
 
 //        System.out.print();
