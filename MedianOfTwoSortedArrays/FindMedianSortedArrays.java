@@ -12,40 +12,159 @@ class TreeNode {
 
 class Solution {
     double findMedianSortedArrays(int A[], int B[]) {
-        if(A[0] > B[0]) {
-            temp = A;A = B;B = temp;
-            sA = sA^sB; sB = sA^sB; sA = sA^sB;
-            eA = eA^eB; eB = eA^eB; eA = eA^eB;
+        int sA = 0, eA = A.length-1, sB = 0, eB = B.length-1,
+            rank = (eA+eB+1)/2;
+        if(eA+eB % 2 == 1) return findMedian(A,sA,eA,B,sB,eB,rank);
+        else return (findMedian(A,sA,eA,B,sB,eB,rank)+
+                     findMedian(A,sA,eA,B,sB,eB,eA+eB+1-rank))/2.0;
+    }
+    double findMedian(int[] A, int sA, int eA, int[] B,
+                      int sB, int eB, int rank) {
+        int del;
+        int[] temp; 
+        while(true) {
+            if(eA-sA+1 > eB-sB+1) {
+                temp = A; A = B; B= temp;
+                sA = sA^sB; sB = sA^sB; sA = sA^sB;
+                eA = eA^eB; eB = eA^eB; eA = eA^eB;
+            }
+            if(eA-sA+1 == 0) return B[rank];
+            if(rank == 0) return Math.min(A[sA],B[sB]);
+            del = Math.min(eA-sA, rank/2);
+            if(A[sA+del] == B[sB+rank/2]) {
+                return A[sA+del];
+            }else if(A[sA+del] < B[sB+rank/2]) {
+                sA = sA+del+1;
+                rank -= del+1;
+            }else if(A[sA+del] > B[sB+rank/2]) {
+                sB = sB+rank/2+1;
+                rank -= rank/2+1;
+            }
         }
-        lenA = eA-sA+1;
-        lenB = eB-sB+1;
-        idxA = (lenA-1)/2;
-        idxB1 = Arrays.binarySearch(B, A[idxA]);
-        idxB2 = Arrays.binarySearch(B, A[eA]);
-        if(idxB2 < 0) {
-            if (lenA-1 < rank) return B[rank-lenA];
-            else return A[rank];
-        }else if(idxB2 < 
+    }
 
-        if(idxB + idxA + 1 == rank) {
-            if(odd) return B[idxB];
-            else {
-                if(idxA < lenA-1 && idxB < lenB-1) {
-                    return (A[idxA+1] < B[idxB+1]? (B[idxB]+A[idxA+1])/2 :
-                            (B[idxB]+B[idxB+1])/2);
-                }else if(idxA < lenA-1) {
-                    return (B[idxB]+A[idxA+1])/2;
-                }else if(idxB < lenB-1) {
-                    return (B[idxB]+B[idxB+1])/2;
+
+
+
+        
+        
+    double hopelessFindMedianSortedArrays(int A[], int B[]) {
+        int sA = 0, sB = 0, eA = A.length-1, eB = B.length-1,midA,
+            midB,lenA = A.length, lenB = B.length, rank = (eA+eB+1)/2;
+        boolean odd = (A.length+B.length)%2 == 1;
+        int[] temp;
+        if(B.length == 0) {
+            if(odd) return A[rank];
+            else return (A[rank]+A[rank+1])/2.0;
+        }else if(A.length == 0) {
+            if(odd) return B[rank];
+            else return (B[rank]+B[rank+1])/2.0;
+        }
+        while(true) {
+            if(A[sA] > B[sB]) {
+                temp = A;A = B;B = temp;
+                sA = sA^sB; sB = sA^sB; sA = sA^sB;
+                eA = eA^eB; eB = eA^eB; eA = eA^eB;
+                lenA = lenA^lenB; lenB = lenA^lenB; lenA = lenA^lenB;
+            }
+            midA = (sA+eA)/2;
+            midB = (sB+eB)/2;
+            if(rank >= eA+1 && A[eA] <= B[sB]) {
+                if(odd) return B[rank-eA-1];
+                else return (B[rank-eA-1]+B[rank-eA])/2.0;
+            }else if(rank < eA+1 && A[rank] <= B[sB]) {
+                if(odd) return A[rank];
+                else {
+                    if(rank == lenA-1) return (A[rank]+B[sB])/2.0;
+                    else return ((A[rank] + 
+                                 (A[rank+1] < B[sB]?A[rank+1]:B[sB]))/2.0);
+                }
+            }else if(rank > eB+1 && A[rank-eB-1] >= B[eB]) {
+                if(odd) return A[rank-eB-1];
+                else return (A[rank-eB-1]+A[rank-eB])/2.0;
+            }else {
+                if(midA == sA && midB == sB) {
+                    if(B[eB] <= A[eA]) {
+                        if(midA+eB+1 == rank) {
+                            if(odd) return B[eB];
+                            else {
+                                if(eA < lenA-1 && eB < lenB-1)
+                                    return ((B[eB]+(A[eA+1]<B[eB+1]?
+                                                    A[eA+1]:B[eB+1]))/2.0);
+                                else if(eA < lenA-1)
+                                    return ((B[eB] + A[eA])/2.0);
+                                else if(eB < lenB-1)
+                                    return ((B[eB] + B[eB+1])/2.0);
+                            }
+                        }else{
+                            if(odd) return A[eA];
+                            else {
+                                if(eA < lenA-1 && eB < lenB-1)
+                                    return ((A[eA]+(A[eA+1]<B[eB+1]?
+                                                    A[eA+1]:B[eB+1]))/2.0);
+                                else if(eA < lenA-1)
+                                    return ((A[eA] + A[eA+1])/2.0);
+                                else if(eB < lenA-1)
+                                    return ((A[eA] + B[eB+1])/2.0);
+                            }
+                        }
+                    }else {
+                        if(midB+eA+1 == rank) {
+                            if(odd) return A[eA];
+                            else {
+                                if(eA < lenA-1)
+                                    return ((A[eA]+(A[eA+1]<B[eB]?
+                                                    A[eA+1]:B[eB]))/2.0);
+                                else return ((A[eA] + B[eB])/2.0);
+                            }
+                        }else{
+                            if(odd) return B[eB];
+                            else {
+                                if(eA < lenA-1 && eB < lenB-1)
+                                    return ((B[eB]+(A[eA+1]<B[eB+1]?
+                                                    A[eA+1]:B[eB+1]))/2.0);
+                                else if(eA < lenA-1)
+                                    return ((B[eB] + A[eA+1])/2.0);
+                                else if(eB < lenB-1)
+                                    return ((B[eB] + B[eB+1])/2.0);
+                            }
+                        }
+                    }
+                }
+                if(midA+midB+1 == rank) {
+                    if(A[midA] == B[midB]) {
+                        if(odd) return A[midA];
+                        else {
+                            if(midA < lenA-1 && midB < lenB-1)
+                                return ((A[midA]+(A[midA+1]<B[midB+1]?
+                                                A[midA+1]:B[midB+1]))/2.0);
+                            else if(midA < lenA-1)
+                                return ((A[midA] + A[midA+1])/2.0);
+                            else if(midB < lenB-1)
+                                return ((A[midA] + B[midB+1])/2.0);
+                        }
+                    }else if(A[midA] < B[midB]) {
+                        sA = midA;
+                        eB = midB;
+                    }else{
+                        sB = midB;
+                        eA = midA;
+                    }
+                }else if(midA+midB+1 < rank) {
+                    if(A[midA] < B[midB]) {
+                        if(midA == sA) {
+                            if(eA+midB+1 > rank) {
+                                if(B[midB] > A[midA])
+                                    eB = midB;
+                            }
+                        }
+                        else sA = midA;
+                    }else sB = midB;
+                }else {
+                    if(A[midA] > B[midB]) eA = midA;
+                    else eB = midB;
                 }
             }
-        }else if(idxB + idxA +1 < rank) {
-            rank = rank - idxB - idxA - 2;
-            sA = idxA+1;
-            sB = idxB;
-        }else {
-            eA = idxA;
-            eB = idxB-1;
         }
     }
 
@@ -139,19 +258,19 @@ class Solution {
     }
 }
 
-public class  {
+public class FindMedianSortedArrays {
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[][] A = {{}};
-        int[][] B = {{}};
+        int[][] A = {{1,3},{3},{1,2},{1,2},{3,3,7,9},{1,3,7,9},{1,3,4,5,6},
+                     {1,1},{4,5,6,8,9},{}};
+        int[][] B = {{2,4,5,6,7},{1,2,4,5,6},
+                     {1,2},{1,2,3},{2,4,7},{2,4,5,8},
+                     {2},{1,2},{},{2,3}};
 
 
 
         for(int i = 0; i < A.length ; i++) {
-            for(int j = 0; j < B[i].length; j++) {
-            sol.print(sol.
-            }
-            System.out.println();
+            System.out.println(sol.findMedianSortedArrays(A[i],B[i]));
         }
 /*
         sol.printTree(sol.growTree(A[i]));
