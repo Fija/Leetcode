@@ -31,14 +31,14 @@ class Solution {
             if(eA-sA+1 == 0) return B[rank];
             if(rank == 0) return Math.min(A[sA],B[sB]);
             del = Math.min(eA-sA, rank/2);
-            if(A[sA+del] == B[sB+rank/2]) {
+            if(A[sA+del] == B[sB+rank-del-1]) {
                 return A[sA+del];
-            }else if(A[sA+del] < B[sB+rank/2]) {
+            }else if(A[sA+del] < B[sB+rank-del-1]) {
                 sA = sA+del+1;
                 rank -= del+1;
-            }else if(A[sA+del] > B[sB+rank/2]) {
-                sB = sB+rank/2+1;
-                rank -= rank/2+1;
+            }else if(A[sA+del] > B[sB+rank-del-1]) {
+                sB = sB+rank-del;
+                rank -= rank-del;
             }
         }
     }
