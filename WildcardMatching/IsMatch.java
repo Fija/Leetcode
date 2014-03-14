@@ -13,6 +13,69 @@ class TreeNode {
 class Solution {
     boolean isMatch(String s, String p) {
         p = compressAsterisk(p);
+
+        int i = 0, j = 0, lens = s.length(), lenp = p.length(),
+            prev_s = 0, prev_p = 0;
+        boolean has_star = false;
+        int[] p_min_remain = new int[lenp];
+        int[] no_star = new int[1];
+
+        preprocess(p, p_min_remain, no_star);
+
+        while(true) {
+            if(i == lens && j == lenp) return true;
+            if(j == lenp || p_min_remain[j] > lens-i ||
+               j >= no_star[0] && lenp-j != lens-i) return false;
+            if(i == lens) {
+                if(p.charAt(j) != '*') return false;
+                else return j == lenp-1;
+                /*
+                else {
+                    while(j < lenp && p.charAt(j) == '*') j++;
+                    return j == lenp;
+                }
+                */
+            }
+            if(s.charAt(i) == p.charAt(j) && p.charAt(j) != '*' ||
+               p.charAt(j) == '?') {
+                i++;
+                j++;
+            }else {
+                if(p.charAt(j) == '*') {
+                    has_star = true;
+                    //while(j < lenp && p.charAt(j) == '*') j++;
+                    j++;
+                    if(j == lenp) return true;
+                    prev_s = i;
+                    prev_p = j;
+                }else {
+                    if(!has_star) return false;
+                    else {
+                        prev_s++;
+                        i = prev_s;
+                        j = prev_p;
+                    }
+                }
+            }
+        }
+    }
+    void preprocess(String p, int[] p_min_remain, int[] no_star) {
+        int len = p.length(), count = 0;
+        boolean star = p.charAt(len-1) == '*';
+        no_star[0] = len;
+        for(int i = len-1; i >= 0; i--) {
+            if(!star) no_star[0]--;
+            if(p.charAt(i) == '*') {
+                p_min_remain[i] = count;
+                star = true;
+                continue;
+            }
+            p_min_remain[i] = ++count;
+        }
+    }
+
+    boolean slowisMatch(String s, String p) {
+        p = compressAsterisk(p);
         return recurMatch(s, p, 0, 0);
     }
     String compressAsterisk(String p) {
@@ -140,17 +203,19 @@ public class IsMatch{
     public static void main(String[] args) {
         Solution sol = new Solution();
         String[] A = {"abbabaaabbabbaababbabbbbbabbbabbbabaaaaababababbbabababaabbababaabbbbbbaaaabababbbaabbbbaabbbbababababbaabbaababaabbbababababbbbaaabbbbbabaaaabbababbbbaababaabbaba",
+                      "abcdebcdde",
                       "","","a","***?",
                       "geeks","geeksforgeeks","gee","pqrst","abcdhghgbcd",
                       "abcd","abcd","abcd",
                       "aa","aa","aaa","aa","aa","ab","aab"};
-        String[] B = {"**aa*****ba*a*bb**aa*ab****a*aaaaaa***a*aaaa**bb",
-           //"**aa*****ba*a*bb**aa*ab****a*aaaaaa***a*aaaa**bbabb*b*b**aaaaaaaaa*a********ba*bbb***a*ba*bb*bb**a*b*bb",
+        String[] B = {"**aa*****ba*a*bb**aa*ab****a*aaaaaa***a*aaaa**bbabb*b*b**aaaaaaaaa*a********ba*bbb***a*ba*bb*bb**a*b*bb",
+                      "*abcd?e*",
                       "","a","","*",
                       "g*ks","ge?ks*","g*k","*pqrs","abc*bcd","abc*c?d","*c*d",
                       "*?c*d",
                       "a","aa","aa","*","a*","?*","c*a*b"};
-        boolean[] C = {true,
+        boolean[] C = {false,
+                       false,
                        true, false, false, true,
                        true, true, false, false, true, false, true, true,
                        false, true, false, true, true, true, false};
