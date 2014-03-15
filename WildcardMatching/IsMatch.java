@@ -24,8 +24,17 @@ class Solution {
 
         while(true) {
             if(i == lens && j == lenp) return true;
-            if(j == lenp || p_min_remain[j] > lens-i ||
-               j >= no_star[0] && lenp-j != lens-i) return false;
+            if(j == lenp) {
+                if(!has_star) return false;
+                else {
+                    prev_s++;
+                    i = prev_s;
+                    j = prev_p;
+                }
+            }
+            if(p_min_remain[j] > lens-i ||
+               !has_star && j >= no_star[0] && lenp-j != lens-i)
+                return false;
             if(i == lens) {
                 if(p.charAt(j) != '*') return false;
                 else return j == lenp-1;
@@ -61,6 +70,7 @@ class Solution {
     }
     void preprocess(String p, int[] p_min_remain, int[] no_star) {
         int len = p.length(), count = 0;
+        if(len == 0) return;
         boolean star = p.charAt(len-1) == '*';
         no_star[0] = len;
         for(int i = len-1; i >= 0; i--) {
@@ -68,6 +78,7 @@ class Solution {
             if(p.charAt(i) == '*') {
                 p_min_remain[i] = count;
                 star = true;
+                no_star[0]++;
                 continue;
             }
             p_min_remain[i] = ++count;
@@ -79,16 +90,16 @@ class Solution {
         return recurMatch(s, p, 0, 0);
     }
     String compressAsterisk(String p) {
-        String new_p = "";
+        StringBuilder new_p = new StringBuilder();
         char c;
         int len = p.length();
         for(int i = 0; i < len; i++) {
             c = p.charAt(i);
             if(c == '*' && i < len-1 && p.charAt(i+1) == '*')
                 continue;
-            new_p = new_p + c;
+            new_p.append(c);
         }
-        return new_p;
+        return new_p.toString();
     }
     boolean recurMatch(String s, String p, int i, int j) {
         int lens = s.length(), lenp = p.length();
@@ -203,22 +214,33 @@ public class IsMatch{
     public static void main(String[] args) {
         Solution sol = new Solution();
         String[] A = {"abbabaaabbabbaababbabbbbbabbbabbbabaaaaababababbbabababaabbababaabbbbbbaaaabababbbaabbbbaabbbbababababbaabbaababaabbbababababbbbaaabbbbbabaaaabbababbbbaababaabbaba",
-                      "abcdebcdde",
+                      "abcdebcdde","hi",
                       "","","a","***?",
                       "geeks","geeksforgeeks","gee","pqrst","abcdhghgbcd",
                       "abcd","abcd","abcd",
                       "aa","aa","aaa","aa","aa","ab","aab"};
         String[] B = {"**aa*****ba*a*bb**aa*ab****a*aaaaaa***a*aaaa**bbabb*b*b**aaaaaaaaa*a********ba*bbb***a*ba*bb*bb**a*b*bb",
-                      "*abcd?e*",
+                      "*abcd?e*","*?",
                       "","a","","*",
                       "g*ks","ge?ks*","g*k","*pqrs","abc*bcd","abc*c?d","*c*d",
                       "*?c*d",
                       "a","aa","aa","*","a*","?*","c*a*b"};
         boolean[] C = {false,
-                       false,
+                       false, true,
                        true, false, false, true,
                        true, true, false, false, true, false, true, true,
                        false, true, false, true, true, true, false};
+        StringBuilder s = new StringBuilder();
+        StringBuilder p = new StringBuilder();
+        p.append('*');
+        for(int i = 0; i < 32320; i++) {
+            s.append('a');
+            p.append('a');
+        }
+        p.append('*');
+        A[0] = s.toString();
+        B[0] = p.toString();
+        C[0] = true;
 
 
 
