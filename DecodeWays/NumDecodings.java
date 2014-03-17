@@ -11,42 +11,47 @@ class TreeNode {
 }
 
 class Solution {
-    int divide(int dividend, int divisor) {
-        boolean positive = false;
-        if(dividend > 0) {
-            dividend = -dividend;
-            if(divisor > 0) {
-                positive = true;
-                divisor = -divisor; 
+    int numDecodings(String s) {
+        int len = s.length();
+        if(len == 0) return 0;
+        int[] dp = new int[len];
+        if(s.charAt(0) == '0') {
+            return 0;
+        }else {
+            dp[0] = 1;
+        }
+        if(len == 1) {
+            return 1;
+        }
+        int num = Integer.parseInt(s.substring(0,2));
+        if(num > 26) {
+            if(s.charAt(1) == '0') {
+                return 0;
+            }else {
+                dp[1] = 1;
             }
         }else {
-            if(divisor < 0) {
-                positive = true;
+            if(num == 20 || num == 10) {
+                dp[1] = 1;
             }else {
-                divisor = -divisor;
+                dp[1] = 2;
             }
         }
-        if(dividend > divisor) {
-            return 0;
-        }
-        int sum = divisor;
-        List<Integer> products = new ArrayList<Integer>();
-        products.add(0);
-        products.add(divisor);
-        while(sum >= dividend - sum) {
-            sum += sum;
-            products.add(sum);
-        }
-        int k = products.size()-1;
-        int quotient = 0;
-        while(k >= 1) {
-            if(dividend <= products.get(k)) {
-                quotient += (1 << (k-1));
-                dividend -= products.get(k);
+        for(int i = 2; i < len; i++ ) {
+            num = Integer.parseInt(s.substring(i-1,i+1));
+            if(num % 10 == 0) {
+                if(num == 20 || num == 10) {
+                    dp[i] = dp[i-2];
+                }else {
+                    return 0;
+                }
+            }else if(num > 26 || num < 10) {
+                dp[i] = dp[i-1];
+            }else {
+                dp[i] = dp[i-2] + dp[i-1];
             }
-            k--;
         }
-        return positive? quotient : -quotient;
+        return dp[len-1];
     }
 
 //        System.out.print();
@@ -139,13 +144,13 @@ class Solution {
     }
 }
 
-public class Divide {
+public class NumDecodings {
     public static void main(String[] args) {
         Solution sol = new Solution();
-        int[] A = {1,4375,-0,-2147483648,2147483647,3,3,3,-2147483648};
-        int[] B = {-1,28,1,2147483647,-2147483648,2,4,3,1};
+        String[] A = {"111","200",
+                      "0","20","09","2307","1","27","12","2222","2202"};
         for(int i = 0; i < A.length ; i++) {
-            System.out.println(sol.divide(A[i],B[i])==A[i]/B[i]);
+            System.out.println(sol.numDecodings(A[i]));
         }
 /*
         sol.printTree(sol.growTree(A[i]));
